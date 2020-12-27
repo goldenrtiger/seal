@@ -9,10 +9,17 @@ def calc( l, d ):
     total = 1
     size = len( l )
     idx = 0
+    count = [];                 countExit = []
 
     for k, v in d.items(): 
         total *= (size - idx) / v
         idx += 1
+        count.append( v )
+        if v not in countExit:
+            countExit.append( v )
+
+    for c in countExit:
+        total *= count.count( c )
     
     return int( total )
     
@@ -25,7 +32,6 @@ def Solution( S ):
     vowels = ['A', 'E', 'I', 'O', 'U']
 
     SConsonart = [];                    SVowels = []
-    consonartSum = 0;                   vowelsSum = 0
     consonartExist = dict();            vowelsExist = dict()
 
     for c in S:
@@ -62,6 +68,10 @@ def Solution( S ):
         return 0
     
 
+S = "TTBBAAAA"
+print( "6: ", Solution( S ) )
+S = "TTTBAAAA"
+print( "4: ", Solution( S ) )
 S = "BAR" # 2
 print( "2: ", Solution( S ) )
 S = "AABB" # 1
@@ -82,6 +92,9 @@ S = "BABACA"
 print( "3: ", Solution( S ) )
 S = "BABABA"
 print( "1: ", Solution( S ) )
-
+S = "AATTBBEE"
+print( "x: ", Solution( S ) )
+S = "AATTATBE"
+print( "x: ", Solution( S ) )
 
 
