@@ -19,7 +19,7 @@ def calc( l, d ):
             countExit.append( v )
 
     for c in countExit:
-        total *= count.count( c )
+        if c > 1: total *= count.count( c )
     
     return int( total )
     
@@ -66,35 +66,26 @@ def Solution( S ):
         return total
     else:
         return 0
-    
 
-S = "TTBBAAAA"
-print( "6: ", Solution( S ) )
-S = "TTTBAAAA"
-print( "4: ", Solution( S ) )
-S = "BAR" # 2
-print( "2: ", Solution( S ) )
-S = "AABB" # 1
-print( "1: ", Solution( S ) )
-S = "AABCY" # 6
-print( "6: ", Solution( S ) )
-S = "AAAB" # 0
-print( "0: ", Solution( S ) )
-S = "AABBY" # 3
-print( "3: ", Solution( S ) )
-S = "AOBCY" # 12
-print( "12: ", Solution( S ) )
-# S = "AATTBBEE"
-# print( "x: ", Solution( S ) )
-S = "BABAC"
-print( "3: ", Solution( S ) )
-S = "BABACA"
-print( "3: ", Solution( S ) )
-S = "BABABA"
-print( "1: ", Solution( S ) )
-S = "AATTBBEE"
-print( "x: ", Solution( S ) )
-S = "AATTATBE"
-print( "x: ", Solution( S ) )
 
+def test( d ):
+    size = len( d )
+    correct = 0
+
+    for k, v in d.items():
+        res = Solution( k )
+        if v == res:
+            correct += 1
+        else:
+            print( "String: {0}, Should be: {1}, but {2}".format( k, v, res) )
+
+    print( "total: {0}, correct: {1}, ratio: {2}".format( size, correct, correct/size ))
+
+
+
+d = {"TTBBAAAA": 6, "TTTBAAAA": 4, "BAR": 2, "AABB": 1, "AABCY": 6, 
+     "BABAC": 3, "BABACA": 3, "BABABA": 1, 
+    }
+
+test( d )
 
