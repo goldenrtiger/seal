@@ -4,88 +4,106 @@
 # 2. does not contain two consecutive vowels (a, e, i, o, u)
 # 3. does not contain two consecutive consonants
 
+def Calc( size, d ):
+    total = Factorial( size )
+    for k, v in d.items():
+        if v != 1:
+            total /= Factorial( v )
+    
+    return total
 
-def calc( l, d ):
+def Factorial( size ):
     total = 1
-    size = len( l )
-    idx = 0
-    count = [];                 countExit = []
+    for i in range( 1, size + 1 ):
+        total *= i
 
-    for k, v in d.items(): 
-        total *= (size - idx) / v
-        idx += 1
-        count.append( v )
-        if v not in countExit:
-            countExit.append( v )
+    return total
 
-    for c in countExit:
-        if c > 1: total *= count.count( c )
-    
-    return int( total )
-    
+def InsertDict( d, key ):
+    if key in d.keys():
+        d[key] += 1
+    else:
+        d[key] = 1
 
 def Solution( S ):
-    if len( S ) == 1:
-        return 1
+    if len( S ) == 1:                   return 1
 
-    consonart = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z', 'Y']
     vowels = ['A', 'E', 'I', 'O', 'U']
-
-    SConsonart = [];                    SVowels = []
+    LConsonart = 0;                     LVowels = 0
     consonartExist = dict();            vowelsExist = dict()
 
     for c in S:
-        if c in consonart:
-            SConsonart.append( c )
-            if c not in consonartExist:
-                consonartExist[c] = 0
-        else:
-            SVowels.append( c )
-            if c not in vowelsExist:
-                vowelsExist[c] = 0
+        if c in vowels:
+            LVowels += 1
+            InsertDict( vowelsExist, c )
+        else: 
+            LConsonart += 1
+            InsertDict( consonartExist, c )
     
-    LConsonart = len( SConsonart );     LVowels = len( SVowels )
-
-    for c in consonartExist.keys():
-        consonartExist[c] = SConsonart.count( c )
-    for c in vowelsExist.keys():
-        vowelsExist[c] = SVowels.count( c )
-
-    # sort dict
-    # lambda dict: {k: v for k, v in sorted(consonartExist.items(), key=lambda item: item[1])}
-    consonartSort = {k: v for k, v in sorted(consonartExist.items(), key=lambda item: item[1])}
-    vowelsSort = {k: v for k, v in sorted(vowelsExist.items(), key=lambda item: item[1])}
-
     if LConsonart == LVowels or LConsonart == LVowels + 1:
-        total = 1
-        # calc consonar
-        total *= calc( SConsonart, consonartSort )
-        # calc vowels
-        total *= calc( SVowels, vowelsSort )
-
-        return total
+        return Calc( LConsonart, consonartExist ) * Calc( LVowels, vowelsExist )
+        
     else:
         return 0
 
+# -- list all possibilities
+import itertools  
+from itertools import permutations,combinations,product
 
-def test( d ):
-    size = len( d )
+def unique(iterable):
+    seen = set()
+    for x in iterable:
+        if x in seen:
+            continue
+        seen.add(x)
+        yield x
+        
+def Solution2(S):
+    Vsamples = ["A","E","I","O","U"]    
+    Vs = []; Cs = []
+    for c in S:
+        if c in Vsamples:
+            Vs.append(c)
+        else:
+            Cs.append(c)
+            
+    LenVs = len(Vs); LenCs = len(Cs)
+    if LenVs - LenCs > 0 or LenCs -LenVs >1: 
+        return 0
+    
+    VPermutations =[]
+    for a in unique(permutations(Vs)):
+        VPermutations.append(a)
+    Vlen = len(VPermutations) 
+    
+    CPermutations =[]
+    for a in unique(permutations(Cs)):
+        CPermutations.append(a)
+    Clen = len(CPermutations) 
+    
+    count = Vlen * Clen
+    # print(Vs,Cs,Vlen,Clen)
+    return count
+
+# -- test
+def test( words ):
+    size = len( words )
     correct = 0
 
-    for k, v in d.items():
-        res = Solution( k )
-        if v == res:
+    for word in words:
+        res = Solution( word )
+        c = Solution2( word )
+        
+        if c == res:
             correct += 1
         else:
-            print( "String: {0}, Should be: {1}, but {2}".format( k, v, res) )
+            print( "String: {0}, Should be: {1}, but {2}".format( word, c, res) )
 
-    print( "total: {0}, correct: {1}, ratio: {2}".format( size, correct, correct/size ))
+    print( "total: {0}, correct: {1}, ratio: {2}".format( size, correct, correct/size ) )
 
+words = ["TTBBAAAA", "TTTBAAAA", "BAR", "AABB", "AABCY", "BABAC", "BABACA", "BABABA", "TTBBCCAAAAAA", 
+        "TTTBBBCCCAAAAAAAAA", "TTTBBBCCCAAAAAAAOO"
+    ]
 
-
-d = {"TTBBAAAA": 6, "TTTBAAAA": 4, "BAR": 2, "AABB": 1, "AABCY": 6, 
-     "BABAC": 3, "BABACA": 3, "BABABA": 1, 
-    }
-
-test( d )
+test( words )
 
